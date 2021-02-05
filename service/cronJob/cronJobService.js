@@ -5,10 +5,11 @@ const speedTestServie = require('../speedTest/speedTestService');
 
 async function runSpeedTest() {
     // var job = new cronJob('0 0 */1 * * *', async function () {
-    var job = new cronJob('0 */2 * * * *', async function () {
+    var job = new cronJob('*/20 * * * * *', async function() {
         console.log('[START] speedtest-script...');
 
         let nameFile = getNameFile();
+        console.log(nameFile);
         let jsonSpeedtest = await speedTestServie.runSpeedTest();
 
         if (jsonSpeedtest != false) {
@@ -25,7 +26,19 @@ async function runSpeedTest() {
 
 function getNameFile() {
     let date = new Date();
-    return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '_speedtest.log';
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    if (month < 10) {
+        month = '0' + month;
+    }
+
+    if (day < 10) {
+        day = '0' + day;
+    }
+
+    return year + '-' + month + '-' + day + '_speedtest.log';
 }
 
 function composeSpeedTestInfos(jsonSpeedtest) {
